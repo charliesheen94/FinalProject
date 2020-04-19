@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/fullpage_temp.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <!-- start company setup form section -->
+        <h:form id="add_player_frm">
+            <div class="Container100 ui-fluid">
+                <div class="Container100 Responsive100">
+                    <div class="CardTopic" style="left: auto">Player Information</div>
+                    <div class="Separator"></div>
+                </div>
+                <div class="Container50 Responsive100">
+                    <p:messages id="msgs" />
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank" style="border:0px none; background-color:transparent;">
+
+                        <p:outputLabel value="Game Name" for="name" />
+                        <p:inputText value="#{allGamesViewBean.games.name}" id="name" required="true" placeholder="Game Name" requiredMessage="Game Name is required.">
+<!--                            <f:validator validatorId="playerValidator" />-->
+<!--                            <p:ajax update="name" event="keyup" />-->
+                        </p:inputText>
+
+                        <p:outputLabel for="Price" value="Price"/>
+                        <p:inputText id="Price" value="#{allGamesViewBean.gamePrice}" required="true" requiredMessage="Price is required." placeholder="Price" maxlength="5" validatorMessage="The Price range is $1 - $200">
+                        <f:validateRegex pattern="([1-9]|[1-8][0-9]|9[0-9]|1[0-9]{2}|200)" />
+                        </p:inputText>
+
+                        <p:outputLabel for="Publisher" value="Publisher Name"/>
+                        <p:inputText id="Publisher" value="#{allGamesViewBean.games.publisher}" required="true" requiredMessage="Publisher Name is required." placeholder="Publisher Name" maxlength="50">
+                        </p:inputText>
+
+                        <p:outputLabel value="Console" for="console" />
+                        <p:selectOneMenu value="#{allGamesViewBean.games.console}" id="console" required="true" requiredMessage="Console Name is Required.">
+                            <f:selectItem itemLabel="--Select Console Name--"/>
+                            <f:selectItems value="#{allGamesViewBean.consoles}" var="console" itemLabel="#{console.consoleName}(#{console.consoleCode})" itemValue="#{console.consoleName}" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                </div>
+            </div>
+
+            <div class="Container100">
+                <div class="Separator"></div>
+                <p:growl id="plyer_add_msg" showSummary="false" showDetail="true" showIcon="true"  closable="true"></p:growl>
+                <center>
+                    <p:commandButton value="Add Game" id="add_player_btn" ajax="false" action="#{allGamesViewBean.addPlayerInformation()}" update="add_player_frm,plyer_add_msg,msg"
+                                     style="width: auto; margin-right: 1%;" icon="fa fa-plus" />
+                    <p:commandButton value="Section Clear" actionListener="#{allGamesViewBean.refresh()}" icon="fa fa-refresh" update="add_player_frm" process="@this" />
+                </center>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/fullpage_temp.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <!-- start company setup form section -->
+        <h:form id="player_list_frm">
+            <div class="Container100 ui-fluid">
+                <div class="Container100 Responsive100">
+                    <div class="CardTopic" style="left: auto">Game Details
+                        <p:commandButton value="Add Games"  ajax="false" action="/addGame.xhtml?faces-redirect=true" style="width: auto; margin-right: 1%;" icon="fa fa-plus"></p:commandButton>
+                    </div>
+                    <div class="Separator"></div>
+                </div>
+                <div class="Container100 Responsive100">
+                    <ui:repeat value="#{editGameViewBean.gamesList}" var="games">
+                        <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail">
+                            <p:graphicImage library="images" name="#{games.name.toLowerCase()}.jpg"/>
+                            <p:outputPanel>
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h:outputText value="Game Name:"/>
+                                    <h:outputText value="#{games.name}" style="font-weight: bold"/>
+                                    <h:outputText value="Price:"/>
+                                    <h:outputText value="$#{games.price}" style="font-weight: bold"/>
+                                    <h:outputText value="Publisher:"/>
+                                    <h:outputText value="#{games.publisher}" style="font-weight: bold"/>
+                                    <h:outputText value="Platform:"/>
+                                    <h:outputText value="#{games.console}" style="font-weight: bold"/>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:commandButton value="Update Games" actionListener="#{editGameViewBean.editGameInfo(games)}"
+                                                 update=":update_player_frm_two" process="@this" oncomplete="PF('player_dialog').show()"
+                                                 style="width: auto; margin-right: 1%;" icon="fa fa-plus">
+
+                                </p:commandButton>
+                                <p:commandButton value="Delete Game" id="delete_player_btn" action="#{editGameViewBean.deleteGame(games.gameId)}" styleClass="red-button"
+                                                 update="player_list_frm" process="@this"
+                                                 style="width: auto; margin-right: 1%;" icon="fa fa-plus" >
+                                    <p:confirm header="Confirmation" message="Are you sure?" icon="fa fa-alert" />
+                                </p:commandButton>
+                            </p:outputPanel>
+                        </h:panelGrid>
+                        <hr/>
+                    </ui:repeat>
+                </div>
+            </div>
+        </h:form>
+
+        <p:dialog header="Update Game information" widgetVar="player_dialog" modal="true" position="center center" draggable="true" closable="true" resizable="false" showHeader="true">
+            <h:form id="update_player_frm_two">
+                <div class="Container100 ui-fluid">
+                    <div class="Container100 Responsive100">
+                        <div class="CardTopic" style="left: auto">Game Information</div>
+                        <div class="Separator"></div>
+                    </div>
+                    <div class="Container100 Responsive100">
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank" style="border:0px none; background-color:transparent;">
+
+
+                            <p:outputLabel value="Game Name" for="name" />
+                            <p:inputText value="#{editGameViewBean.games.name}" id="name" required="true" placeholder="Game Name" requiredMessage="Game Name is required.">
+                            </p:inputText>
+
+                            <p:outputLabel for="Price" value="Price"/>
+                            <p:inputText id="Price" value="${editGameViewBean.gamePrice}" required="true" requiredMessage="Price is required." placeholder="Player Number" maxlength="5" validatorMessage="The Price range is $1 - $200">
+                            <f:validateRegex pattern="([1-9]|[1-8][0-9]|9[0-9]|1[0-9]{2}|200)" />
+                            </p:inputText>
+
+                            <p:outputLabel for="Publisher" value="Publisher Name"/>
+                            <p:inputText id="Publisher" value="#{editGameViewBean.games.publisher}" required="true" requiredMessage="Publisher Name is required." placeholder="Publisher Name" maxlength="50">
+                            </p:inputText>
+
+                            <p:outputLabel value="Console" for="console" />
+                            <p:selectOneMenu value="#{editGameViewBean.games.console}" id="console" required="true" requiredMessage="Console Name is Required.">
+                                <f:selectItem itemLabel="--Select Console Name--"/>
+                                <f:selectItems value="#{editGameViewBean.consoles}" var="console" itemLabel="#{console.consoleName}(#{console.consoleCode})" itemValue="#{console.consoleName}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                    </div>
+                </div>
+
+                <div class="Container100">
+                    <div class="Separator"></div>
+                    <p:growl id="plyer_update_msg" showSummary="false" showDetail="true" showIcon="true"  closable="true"></p:growl>
+                    <center>
+                        <p:commandButton value="Update Game" id="add_player_btn" ajax="false" action="#{editGameViewBean.updateGame()}"
+                                         update="update_player_frm_two,plyer_update_msg"
+                                         style="width: auto; margin-right: 1%;" icon="fa fa-plus" />
+                    </center>
+                </div>
+            </h:form>
+        </p:dialog>
+        <div class="Card" >
+            <p:confirmDialog widgetVar="player_info_del_wgt" global="true" closeOnEscape="true" closable="true" showEffect="flip" hideEffect="explode">
+                <p:commandButton value="Yes" type="button" style="background-color: red;" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="No" type="button" style="background-color: green;" styleClass="ui-confirmdialog-no" icon="fa fa-times-circle" />
+            </p:confirmDialog>
+        </div>
+    </ui:define>
+</ui:composition>

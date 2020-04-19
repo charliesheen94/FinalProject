@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/fullpage_temp.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <!-- start company setup form section -->
+        <h:form id="add_console_frm">
+            <div class="Container100 ui-fluid">
+                <div class="Container100 Responsive100">
+                    <div class="CardTopic" style="left: auto">Console Add</div>
+                    <div class="Separator"></div>
+                </div>
+                <div class="Container50 Responsive100">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank" style="border:0px none; background-color:transparent;">
+
+                        <p:outputLabel value="Console Code" for="consoleCode" />
+                        <p:inputText value="#{consoleBean.console.consoleCode}" id="consoleCode" required="true" placeholder="Console Code" maxlength="3" requiredMessage="Console Code is required.">
+                        </p:inputText>
+
+                        <p:outputLabel for="consoleName" value="Console Name"/>
+                        <p:inputText id="consoleName" value="#{consoleBean.console.consoleName}" required="true" requiredMessage="Console name is required." placeholder="Console Name" maxlength="100">
+                        </p:inputText>
+                    </p:panelGrid>
+                </div>
+            </div>
+
+            <div class="Container100">
+                <div class="Separator"></div>
+                <p:messages id="console_add_msg" showSummary="false" showDetail="true" showIcon="true" closable="true">
+                    <p:effect type="pulsate" event="load" delay="500" />
+                </p:messages>
+                <center>
+                    <p:commandButton value="Add Console" id="add_player_btn" ajax="false" actionListener="#{consoleBean.addConsole()}" update="add_console_frm,console_add_msg"
+                                     style="width: auto; margin-right: 1%;" icon="fa fa-plus" />
+                </center>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
